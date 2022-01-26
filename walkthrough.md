@@ -87,10 +87,8 @@ ________________________________________________________________________________
 ### Q1 (movies.csv)
 ```
 for each year 
-where publish_date(year) >= 2000
-print movie with max(profit= ((income-cost)/cost)*100
-
-exclude movies with (publish_date == null) || (income == null) || (cost == null)
+where ((publish_date != null) && (publish_date(year) >= 2000) && (income != 0) && (cost != 0))
+print (year, title with max(profit=((income-cost)/cost)*100)
 ```
 ________________________________________________________________________________
 ### Q2 (ratings.csv)

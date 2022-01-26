@@ -3,7 +3,6 @@
 # code for max value through reduceByKey from
 # https://stackoverflow.com/questions/52137351/pyspark-python-reducebykey-filter-by-math-max
 
-from posixpath import split
 from pyspark.sql import SparkSession
 from io import StringIO
 import csv
