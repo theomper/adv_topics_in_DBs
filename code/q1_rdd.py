@@ -50,8 +50,5 @@ results = \
 for result in results.collect():
     print ("Year = ", result[0], "Title = ", result[1][0])
 
-# Stop clock
-# exec_time = time.time() - start_time
-
 # Print time spent for execution
 print("--- %s seconds ---" % (time.time() - start_time))
