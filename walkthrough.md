@@ -41,9 +41,9 @@ cost        -> 5
 income      -> 6
 favoured    -> 7
 ```
-________________
+
 8844,Jumanji,When siblings Judy and Peter discover an enchanted board game that opens the door to a magical world they unwittingly invite Alan an adult whos been trapped inside the game for 26 years into their living room Alans only hope for freedom is to finish the game which proves risky as all three find themselves running from giant rhinoceroses evil monkeys and other terrifying creatures,1995-12-15T00:00:00.000+02:00,104.0,65000000,262797249,17.015539
-_______________
+________________________________________________________________________________
 
 movie_genres.csv // 91K entries // 1.3MB
 (movie_id, genre)
@@ -86,7 +86,7 @@ timestamp   -> 3
 ________________________________________________________________________________
 ### Q1 (movies.csv)
 ```
-for each year 
+for each year
 where ((publish_date != null) && (publish_date(year) >= 2000) && (income != 0) && (cost != 0))
 print (year, title with max(profit=((income-cost)/cost)*100)
 ```
@@ -97,11 +97,14 @@ find percentage of users with (avg rating > 3.0)
 ```
 ________________________________________________________________________________
 ### Q3 (movies.csv + movies_genres.csv + ratings.csv)
-
-
+```
+for each genre find [(avg rating) and count(movies joined by this genre)]
+```
 ________________________________________________________________________________
 ### Q4 ()
 ```
+find avg length of a movie's description by counting words
+print the results devided per 5 years (2000-2004, 2005-2009,..., 20015-2019)
 exclude movies with (description == null)
 ```
 ________________________________________________________________________________
