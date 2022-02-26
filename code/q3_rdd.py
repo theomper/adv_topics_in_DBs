@@ -13,7 +13,7 @@ def split_complex(x):
 # Start clock
 start_time = time.time()
 
-spark = SparkSession.builder.appName("q2_rdd").getOrCreate()
+spark = SparkSession.builder.appName("q3_rdd").getOrCreate()
 
 sc = spark.sparkContext
 
