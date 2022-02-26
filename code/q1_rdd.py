@@ -30,7 +30,10 @@ sc = spark.sparkContext
 # x[3] = publish date
 # x[5] = cost
 # x[6] = income
-# Result (Year, (Title, Profit)) => (Year, Movie)
+# Result = (year, (title, profit))
+# result[0] = year
+# result[1][0] = title
+# result[1][1] = profit
 results = \
     sc.textFile("hdfs://master:9000/files/movies.csv"). \
     map(lambda x: split_complex(x)). \
@@ -43,6 +46,7 @@ results = \
     sortByKey()
 
 # Print results
+# Result = (year, (title, profit)) => (year, title)
 for result in results.collect():
     print ("Year = ", result[0], "Title = ", result[1][0])
 
