@@ -1,7 +1,6 @@
 # code for capturing execution time copied from
 # https://stackoverflow.com/questions/1557571/how-do-i-get-time-of-a-python-programs-execution
 
-from re import L
 from pyspark.sql import SparkSession
 from io import StringIO
 import csv
