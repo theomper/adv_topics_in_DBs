@@ -23,14 +23,13 @@ def calc_profit(cost, income):
 start_time = time.time()
 
 spark = SparkSession.builder.appName("q1_rdd").getOrCreate()
-
 sc = spark.sparkContext
 
-# x[1] = title
-# x[3] = publish date
-# x[5] = cost
-# x[6] = income
-# Result = (year, (title, profit))
+# Input - Movies
+# map => (movie_id, title, description, publish_date, duration, cost, income, favoured)
+# filter out ((publish_date == '') && (cost == 0) && (income == 0) && (year > 2000))
+# map => (year, (title, profit))
+# reduce => (year, (title, max(profit)))
 # result[0] = year
 # result[1][0] = title
 # result[1][1] = profit
@@ -45,10 +44,10 @@ results = \
     reduceByKey(lambda x,y: max((x, y), key=lambda x: x[1])). \
     sortByKey()
 
-# Print results
-# Result = (year, (title, profit)) => (year, title)
+# Output
+# result = (year, (title, profit)) => (year, title)
 for result in results.collect():
     print ("Year = ", result[0], "Title = ", result[1][0])
 
 # Print time spent for execution
-print("--- %s seconds ---" % (time.time() - start_time))
+print("---Completed in %s seconds ---" % (time.time() - start_time))

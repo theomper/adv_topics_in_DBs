@@ -35,15 +35,12 @@ def split_to_5years(x):
 start_time = time.time()
 
 spark = SparkSession.builder.appName("q4_rdd").getOrCreate()
-
 sc = spark.sparkContext
 
-# x[2] = description
-# x[3] = publish date
-# movies = (movieId, (year, word_count_in_desc))
-# movies[0] = movieId
-# movies[1][0] = year
-# movies[1][1] = word_count_in_desc
+# Inputs - Movies and Genres
+# map => (movie_id, title, description, publish_date, duration, cost, income, favoured)
+# filter out ((description == '') && (publish_date == '') && (year == '') && (year > 2000) && (year < 2019))
+# map => (movie_id, (year, word_count_in_description))
 movies = \
     sc.textFile("hdfs://master:9000/files/movies.csv"). \
     map(lambda x: split_complex(x)). \
@@ -55,28 +52,30 @@ movies = \
         and (int(extract_year(x[3])) <= 2019)). \
     map(lambda x: (int(x[0]), (int(extract_year(x[3])), count_words(x[2]))))
 
-# (movieId, 'Drama')
+# map => (movie_id, genre)
+# filter in genre == 'Drama'
+# map => (movie_id, 'Drama')
 genres = \
     sc.textFile("hdfs://master:9000/files/movie_genres.csv"). \
     map(lambda x: split_complex(x)).\
     filter(lambda x: x[1] == 'Drama'). \
     map(lambda x: (int(x[0]), x[1]))
 
-# results after joining movies + genres {movieId, [(year, word_count_in_desc), Drama]}
+# join => (movie_id, ((year, word_count_in_description), 'Drama'))
 joined = movies.join(genres)
 
-# map ['20xx-20xx', (word_count_in_desc, 1)]
-# reduce ['20xx-20xx', sum_of_words, count_of_movies]
-# map ['20xx-20xx', avg_count_of_words]
+# map => ('20xx-20xx', (word_count_in_description, 1))
+# reduce => ('20xx-20xx', sum_of_words, cnt_of_movies)
+# map => ('20xx-20xx', avg_cnt_of_words)
 results = joined. \
     map(lambda x: (split_to_5years(x[1][0][0]), (x[1][0][1], 1))).\
     reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1])). \
     map(lambda x: (x[0], x[1][0] / x[1][1])). \
     sortByKey()
 
-# Print results
+# Output
 for result in results.collect():
     print(result)
 
 # Print time spent for execution
-print("--- %s seconds ---" % (time.time() - start_time))
+print("---Completed in %s seconds ---" % (time.time() - start_time))

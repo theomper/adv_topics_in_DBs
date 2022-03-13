@@ -14,27 +14,27 @@ def split_complex(x):
 start_time = time.time()
 
 spark = SparkSession.builder.appName("q4_rdd").getOrCreate()
-
 sc = spark.sparkContext
 
-# movies
+# Inputs - Movies, Genres and Ratings
+# map => (movie_id, title, description, publish_date, duration, cost, income, favoured)
 movies = \
     sc.textFile("hdfs://master:9000/files/movies.csv"). \
     map(lambda x: split_complex(x))
 
-# genres
+# map => (movie_id, genre)
 genres = \
     sc.textFile("hdfs://master:9000/files/movie_genres.csv"). \
     map(lambda x: split_complex(x))
 
-# ratings
+# map => (user_id, movie_id, rating, timestamp)
 ratings = \
     sc.textFile("hdfs://master:9000/files/ratings.csv"). \
     map(lambda x: split_complex(x))
 
-# Print results
+# Outputs
 # for result in results.collect():
 #     print(result)
 
 # Print time spent for execution
-print("--- %s seconds ---" % (time.time() - start_time))
+print("---Completed in %s seconds ---" % (time.time() - start_time))

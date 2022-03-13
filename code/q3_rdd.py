@@ -14,13 +14,13 @@ def split_complex(x):
 start_time = time.time()
 
 spark = SparkSession.builder.appName("q3_rdd").getOrCreate()
-
 sc = spark.sparkContext
 
+# Inputs - Ratings and Genres
 # map => (user_id, movie_id, rating, timestamp)
-# map => (movieId, (rating, 1))
-# reduce => (movieId, (sum_of_ratings, cnt_of_ratings))
-# map => (movieId, (avg_rating, cnt_of_ratings))
+# map => (movie_id, (rating, 1))
+# reduce => (movie_id, (sum_of_ratings, cnt_of_ratings))
+# map => (movie_id, (avg_rating, cnt_of_ratings))
 ratings = \
     sc.textFile("hdfs://master:9000/files/ratings.csv"). \
     map(lambda x: split_complex(x)). \
@@ -28,13 +28,13 @@ ratings = \
     reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1])). \
     map(lambda x: (x[0], (x[1][0] / x[1][1], x[1][1])))
 
-# map => (movieId, genre)
+# map => (movie_id, genre)
 movie_genres = \
     sc.textFile("hdfs://master:9000/files/movie_genres.csv"). \
     map(lambda x: split_complex(x)).\
     map(lambda x: (int(x[0]), x[1]))
 
-# join => (movieId, (genre, (avg_rating, cnt_of_ratings)))
+# join => (movie_id, (genre, (avg_rating, cnt_of_ratings)))
 joined = movie_genres.join(ratings)
 
 # map => (genre, (avg_rating, 1))
@@ -45,9 +45,9 @@ results = joined. \
     reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1])). \
     map(lambda x: (x[0], (x[1][0]/x[1][1], x[1][1])))
 
-# Print results
+# Output
 for result in results.collect():
     print(result)
 
 # Print time spent for execution
-print("--- %s seconds ---" % (time.time() - start_time))
+print("---Completed in %s seconds ---" % (time.time() - start_time))
