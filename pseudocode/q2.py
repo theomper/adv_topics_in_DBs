@@ -11,7 +11,7 @@ map(ratings, value):
 reduce(user_id, (rating, 1)):
     sum_of_ratings = 0
     cnt_of_movies = 0
-    for rating, cnt in [(rating, 1)]:
+    for rating, cnt in (rating, 1):
         sum_of_ratings += rating
         cnt_of_movies++
     emit(user_id, (sum_of_ratings, cnt_of_movies))
