@@ -29,7 +29,7 @@ sc = spark.sparkContext
 # map => (movie_id, title, description, publish_date, duration, cost, income, favoured)
 # filter out ((publish_date == '') && (cost == 0) && (income == 0) && (year > 2000))
 # map => (year, (title, profit))
-# reduce => (year, (title, max(profit)))
+# reduce => (year, (title, max_profit))
 # result[0] = year
 # result[1][0] = title
 # result[1][1] = profit
