@@ -15,10 +15,10 @@ map(movies, value):
             profit = ((income - cost) / cost) * 100
             emit(year, (title, profit))
 
-reduce(year, [(title, profit)]):
+reduce(year, (title, profit)):
     max_profit = 0
     max_title = ''
-    for title, profit in [(title, profit)]:
+    for title, profit in (title, profit):
         if (max_profit > profit):
             max_profit = profit
             max_title = title
