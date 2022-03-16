@@ -2,9 +2,7 @@ from pyspark.sql import SparkSession
 import time
 
 def count_words(corpus):
-    if corpus is not None:
-        return len(corpus.split(' '))
-    return 0
+    return len(corpus.split())
 
 def periods(year):
     if (year <= 2004):
@@ -34,6 +32,7 @@ sqlString = \
         "FROM movies AS m, movie_genres AS mg " +\
         "WHERE m._c0 = mg._c0 AND mg._c1 = 'Drama' " + \
                 "AND YEAR(m._c3) IS NOT NULL AND YEAR(m._c3) >= 2000 " + \
+                "AND m._c2 IS NOT NULL " + \
         "GROUP BY Year " + \
         "ORDER BY Year "
 

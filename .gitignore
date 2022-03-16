@@ -130,3 +130,4 @@ dmypy.json
 
 # Docs
 report.docx
+.DS_Store
