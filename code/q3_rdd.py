@@ -32,7 +32,7 @@ ratings = \
 movie_genres = \
     sc.textFile("hdfs://master:9000/files/movie_genres.csv"). \
     map(lambda x: split_complex(x)).\
-    map(lambda x: (int(x[0]), x[1]))
+    map(lambda x: (int(x[0]), x[1])).distinct()
 
 # join => (movie_id, (genre, (avg_rating, cnt_of_ratings)))
 joined = movie_genres.join(ratings)
