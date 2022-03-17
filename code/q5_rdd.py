@@ -48,7 +48,8 @@ temp_join = genres.join(movies). \
 # map => (genre, (user_id, count, max_title, max_rating, min_title, min_rating))
 # reduce => (genre, (user_id, max_count, max_title, max_rating, min_title, min_rating))
 # map => (genre, user_id, count, max_title, max_rating, min_title, min_rating))
-final_join = temp_join.join(ratings).map(lambda x: ((x[1][0][0], x[1][1][0]), (1, x[1][0][1], x[1][1][1], x[1][0][2], x[1][0][1], x[1][1][1], x[1][0][2]))). \
+final_join = temp_join.join(ratings). \
+    map(lambda x: ((x[1][0][0], x[1][1][0]), (1, x[1][0][1], x[1][1][1], x[1][0][2], x[1][0][1], x[1][1][1], x[1][0][2]))). \
     reduceByKey(lambda x, y: (x[0]+y[0], x[1] if x[2]>y[2] else (y[1] if y[2]>x[2] else (x[1] if x[3]>y[3] else y[1])),
                                         x[2] if x[2]>y[2] else (y[2] if y[2]>x[2] else (x[2] if x[3]>y[3] else y[2])),
                                         x[3] if x[2]>y[2] else (y[3] if y[2]>x[2] else (x[3] if x[3]>y[3] else y[3])),
