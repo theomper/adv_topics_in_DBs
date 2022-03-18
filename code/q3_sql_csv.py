@@ -14,14 +14,14 @@ sqlString = \
         "SELECT Genres, AVG(Average_Rating) AS Final_Rating, COUNT(DISTINCT Movies) AS Genre_Movies " + \
         "FROM ( " + \
             "SELECT Ratings.Movies, Average_Rating, (mg._c1) AS Genres " + \
-            "FROM ( " + \
+            "FROM movie_genres AS mg, ( " + \
                 "SELECT _c1 AS Movies, AVG(_c2) AS Average_Rating " + \
                 "FROM ratings " + \
                 "GROUP BY _c1" + \
-            ") AS Ratings, " + \
-            "movie_genres AS mg " + \
-            "WHERE mg._c0 = Ratings.Movies) " +\
-        "GROUP BY Genres "
+            ") AS Ratings " + \
+            "WHERE mg._c0 = Ratings.Movies) " + \
+        "GROUP BY Genres " + \
+        "ORDER BY Genres ASC"
 
 res = spark.sql(sqlString)
 
