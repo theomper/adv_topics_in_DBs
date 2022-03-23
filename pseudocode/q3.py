@@ -48,3 +48,6 @@ reduce(genre, (avg_rating, 1)):
 map(movie_id, (sum_of_avg_ratings, cnt_of_avg_ratings)):
     avg_rating_per_genre = sum_of_avg_ratings / cnt_of_avg_ratings
     emit(genre, (avg_rating_per_genre, cnt_of_avg_rating_per_genre))
+
+map(genre, (avg_rating_per_genre, cnt_of_avg_rating_per_genre))
+    emit(genre, avg_rating_per_genre, cnt_of_avg_rating_per_genre)

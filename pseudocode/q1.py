@@ -23,3 +23,6 @@ reduce(year, (title, profit)):
             max_profit = profit
             max_title = title
     emit(year, (max_title, max_profit))
+
+map(year, (max_title, max_profit)):
+    emit(year, title)
