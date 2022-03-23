@@ -1,5 +1,7 @@
 # code for capturing execution time copied from
 # https://stackoverflow.com/questions/1557571/how-do-i-get-time-of-a-python-programs-execution
+# code for prin to csv format
+# https://stackoverflow.com/questions/31385363/how-to-export-a-table-dataframe-in-pyspark-to-csv
 
 from pyspark.sql import SparkSession
 from io import StringIO
@@ -40,14 +42,20 @@ joined = movie_genres.join(ratings)
 # map => (genre, (avg_rating, 1))
 # reduce => (genre, (sum_of_avg_ratings, cnt_of_avg_ratings))
 # map => (genre, (avg_rating_per_genre, cnt_of_avg_rating_per_genre))
+# map => (genre, avg_rating_per_genre, cnt_of_avg_rating_per_genre)
 results = joined. \
     map(lambda x: (x[1][0], (x[1][1][0], 1))). \
     reduceByKey(lambda x, y: (x[0] + y[0], x[1] + y[1])). \
-    map(lambda x: (x[0], (x[1][0]/x[1][1], x[1][1])))
+    map(lambda x: (x[0], (x[1][0]/x[1][1], x[1][1]))). \
+    map(lambda x: (x[0], x[1][0], x[1][1]))
 
 # Output
 for result in results.collect():
     print(result)
+
+# DataFrame creation - Print to csv file in hdfs
+df = spark.createDataFrame(results, ['Genre', 'Avg_Rtg_per_Genre', 'Cnt_of_Avg_Rtng_per_Genre'])
+df.repartition(1).write.format("com.databricks.spark.csv").option("header", "true").save("hdfs://master:9000/outputs/q3_rdd")
 
 # Print time spent for execution
 print("---Completed in %s seconds ---" % (time.time() - start_time))

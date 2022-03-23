@@ -2,6 +2,8 @@
 # https://stackoverflow.com/questions/1557571/how-do-i-get-time-of-a-python-programs-execution
 # code for max value through reduceByKey from
 # https://stackoverflow.com/questions/52137351/pyspark-python-reducebykey-filter-by-math-max
+# code for prin to csv format
+# https://stackoverflow.com/questions/31385363/how-to-export-a-table-dataframe-in-pyspark-to-csv
 
 from pyspark.sql import SparkSession
 from io import StringIO
@@ -42,12 +44,17 @@ results = \
         and (int(extract_year(x[3])) >= 2000)). \
     map(lambda x: (extract_year(x[3]), (x[1], calc_profit(int(x[5]), int(x[6]))))). \
     reduceByKey(lambda x,y: max((x, y), key=lambda x: x[1])). \
-    sortByKey()
+    sortByKey(). \
+    map(lambda x: (x[0], x[1][0]))
 
 # Output
 # result = (year, (title, profit)) => (year, title)
 for result in results.collect():
     print ("Year = ", result[0], "Title = ", result[1][0])
+
+# DataFrame creation - Print to csv file in hdfs
+df = spark.createDataFrame(results, ['Year', 'Title'])
+df.repartition(1).write.format("com.databricks.spark.csv").option("header", "true").save("hdfs://master:9000/outputs/q1_rdd")
 
 # Print time spent for execution
 print("---Completed in %s seconds ---" % (time.time() - start_time))

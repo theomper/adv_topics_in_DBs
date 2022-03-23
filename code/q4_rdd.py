@@ -1,5 +1,7 @@
 # code for capturing execution time copied from
 # https://stackoverflow.com/questions/1557571/how-do-i-get-time-of-a-python-programs-execution
+# code for prin to csv format
+# https://stackoverflow.com/questions/31385363/how-to-export-a-table-dataframe-in-pyspark-to-csv
 
 from pyspark.sql import SparkSession
 from io import StringIO
@@ -76,6 +78,10 @@ results = joined. \
 # Output
 for result in results.collect():
     print(result)
+
+# DataFrame creation - Print to csv file in hdfs
+df = spark.createDataFrame(results, ['5-Year_Period','Avg_Cnt_of_Words_in_Desc'])
+df.repartition(1).write.format("com.databricks.spark.csv").option("header", "true").save("hdfs://master:9000/outputs/q4_rdd")
 
 # Print time spent for execution
 print("---Completed in %s seconds ---" % (time.time() - start_time))
