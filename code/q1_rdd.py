@@ -32,6 +32,7 @@ sc = spark.sparkContext
 # filter out ((publish_date == '') && (cost == 0) && (income == 0) && (year > 2000))
 # map => (year, (title, profit))
 # reduce => (year, (title, max_profit))
+# map => (year, title)
 # result[0] = year
 # result[1][0] = title
 # result[1][1] = profit
@@ -50,7 +51,7 @@ results = \
 # Output
 # result = (year, (title, profit)) => (year, title)
 for result in results.collect():
-    print ("Year = ", result[0], "Title = ", result[1][0])
+    print (result)
 
 # DataFrame creation - Print to csv file in hdfs
 df = spark.createDataFrame(results, ['Year', 'Title'])
