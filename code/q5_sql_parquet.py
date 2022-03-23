@@ -64,6 +64,8 @@ sqlString = \
 
 res = spark.sql(sqlString)
 
+res.repartition(1).write.format("com.databricks.spark.csv").option("header", "true").save("hdfs://master:9000/outputs/q5_parquet")
+
 res.show()
 
 print("--- %s seconds ---" % (time.time() - start_time))
